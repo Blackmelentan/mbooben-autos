@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact — MBOOBEN AUTO'S</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo-link">
+        <img src="public/images/logo.png" alt="MBOOBEN AUTO'S" />
+        <div class="brand-text">
+          <strong>MBOOBEN AUTO'S</strong>
+          <span>QUALITY • TRUST • PERFORMANCE</span>
+        </div>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+      <nav class="nav" id="mainNav">
+        <a href="index.html">Home</a>
+        <a href="inventory.html">Inventory</a>
+        <a href="about.html">About</a>
+        <a href="contact.html" class="active btn-nav">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-hero">
+    <div class="container">
+      <h1>Contact Us</h1>
+      <p>Call, WhatsApp, or send a message — we’ll respond quickly</p>
+    </div>
+  </div>
+
+  <div class="container contact-grid">
+    <div class="contact-card">
+      <h3>Get in Touch</h3>
+      <div class="contact-row">
+        <div>
+          <strong>Phone / WhatsApp</strong>
+          <a href="tel:+2203259613">+220 325 9613</a>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div>
+          <strong>Email</strong>
+          <a href="mailto:Musamboob6@gmail.com">Musamboob6@gmail.com</a>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div>
+          <strong>Location</strong>
+          <span>Yaram Bamba, Yundum, The Gambia</span>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div>
+          <strong>Cheques payable to</strong>
+          <span>MUSA MBOOB</span>
+        </div>
+      </div>
+      <p style="margin-top:1.25rem">
+        <a class="btn btn-primary" href="https://wa.me/2203259613" target="_blank" rel="noopener">Open WhatsApp</a>
+      </p>
+    </div>
+
+    <div class="contact-card">
+      <h3>Send an Enquiry</h3>
+      <form id="enquiryForm">
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" name="name" required placeholder="Full name" />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" required placeholder="+220 …" />
+        </div>
+        <div class="form-group">
+          <label for="interest">Interested in</label>
+          <select id="interest" name="interest">
+            <option value="">Select a vehicle or general</option>
+            <option value="Dodge Charger">Dodge Charger SXT</option>
+            <option value="BMW 3 Series">BMW 3 Series</option>
+            <option value="Ford Explorer White">Ford Explorer (White)</option>
+            <option value="Ford Explorer Blue">Ford Explorer (Blue)</option>
+            <option value="Special Order">Special Order / Import</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Tell us what you need…"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Send via WhatsApp</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <strong>MBOOBEN AUTO'S</strong>
+          <p>Premium vehicle dealership. Quality • Trust • Performance.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="inventory.html">Inventory</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <p>+220 325 9613</p>
+          <p>Musamboob6@gmail.com</p>
+          <p>Yaram Bamba, Yundum, The Gambia</p>
+        </div>
+      </div>
+      <div class="footer-bottom">© 2026 MBOOBEN AUTO'S. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Pre-select car from URL
+    const carParam = new URLSearchParams(location.search).get('car');
+    if (carParam) {
+      const map = {
+        'charger-black': 'Dodge Charger',
+        'bmw-white': 'BMW 3 Series',
+        'explorer-white': 'Ford Explorer White',
+        'explorer-blue': 'Ford Explorer Blue'
+      };
+      if (map[carParam]) document.getElementById('interest').value = map[carParam];
+    }
+
+    document.getElementById('enquiryForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const interest = document.getElementById('interest').value;
+      const message = document.getElementById('message').value.trim();
+      let text = `Hello MBOOBEN AUTO'S,\n\nName: ${name}\nPhone: ${phone}`;
+      if (interest) text += `\nInterested in: ${interest}`;
+      if (message) text += `\n\nMessage: ${message}`;
+      window.open('https://wa.me/2203259613?text=' + encodeURIComponent(text), '_blank');
+    });
+  </script>
+</body>
+</html>

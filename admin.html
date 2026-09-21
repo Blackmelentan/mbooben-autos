@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin — MBOOBEN AUTO'S</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .admin-wrap { max-width: 1000px; margin: 0 auto; padding: 2rem 1rem 3rem; }
+    .login-card {
+      max-width: 360px; margin: 4rem auto; background: var(--card);
+      border: 1px solid var(--border); border-radius: 10px; padding: 1.75rem;
+    }
+    .login-card h1 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+    .login-card p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.25rem; }
+    .stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .stat {
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      padding: 1rem; text-align: center;
+    }
+    .stat strong { display: block; font-size: 1.5rem; color: var(--red); }
+    .stat span { font-size: 0.8rem; color: var(--muted); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { text-align: left; padding: 0.65rem 0.5rem; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status { font-size: 0.75rem; padding: 0.15rem 0.45rem; border-radius: 3px; text-transform: uppercase; }
+    .status-available { background: #1b4332; color: #95d5b2; }
+    .status-sold { background: #3d0000; color: #f5a3a3; }
+    .status-reserved { background: #3d2e00; color: #ffd166; }
+    .btn-sm {
+      background: var(--dark); border: 1px solid var(--border); color: var(--silver);
+      padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.25rem;
+    }
+    .btn-sm:hover { border-color: var(--silver); color: #fff; }
+    .btn-danger:hover { border-color: var(--red); color: var(--red); }
+    .admin-form {
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      padding: 1.25rem; margin-top: 2rem;
+    }
+    .admin-form h2 { font-size: 1.1rem; margin-bottom: 1rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .form-row.full { grid-template-columns: 1fr; }
+    .toolbar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    #loginError { color: var(--red); font-size: 0.85rem; margin-top: 0.5rem; }
+    @media (max-width: 600px) {
+      .stats, .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo-link">
+        <img src="public/images/logo.png" alt="MBOOBEN AUTO'S" />
+        <div class="brand-text">
+          <strong>MBOOBEN AUTO'S</strong>
+          <span>ADMIN</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="index.html">← Public site</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- LOGIN -->
+  <div id="loginBox" class="admin-wrap" style="display:none">
+    <div class="login-card">
+      <h1>Dealership Admin</h1>
+      <p>Sign in to manage inventory. Default password is in the README (change it).</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Sign in</button>
+        <div id="loginError"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="adminApp" class="admin-wrap" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem">
+      <div>
+        <h1 style="font-size:1.4rem">Inventory management</h1>
+        <p style="color:var(--muted);font-size:0.9rem">Add, edit, or remove vehicles. Data saved in this browser (localStorage).</p>
+      </div>
+      <div class="toolbar">
+        <button type="button" class="btn btn-outline" id="exportBtn">Export JSON</button>
+        <button type="button" class="btn btn-outline" id="logoutBtn">Log out</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><strong id="carCount">0</strong><span>Total vehicles</span></div>
+      <div class="stat"><strong id="availableCount">0</strong><span>Available</span></div>
+      <div class="stat"><strong>GMD</strong><span>Currency</span></div>
+    </div>
+
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Vehicle</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Featured</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="carsTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="admin-form" id="carFormWrap">
+      <h2 id="formTitle">Add vehicle</h2>
+      <form id="carForm">
+        <input type="hidden" id="editIndex" value="" />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f_make">Make</label>
+            <input id="f_make" required placeholder="e.g. Dodge" />
+          </div>
+          <div class="form-group">
+            <label for="f_model">Model</label>
+            <input id="f_model" required placeholder="e.g. Charger SXT" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f_year">Year</label>
+            <input id="f_year" type="number" placeholder="2018" />
+          </div>
+          <div class="form-group">
+            <label for="f_price">Price (GMD)</label>
+            <input id="f_price" type="number" required placeholder="1850000" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f_color">Colour</label>
+            <input id="f_color" placeholder="Black with Yellow Stripes" />
+          </div>
+          <div class="form-group">
+            <label for="f_plate">Plate</label>
+            <input id="f_plate" placeholder="KM 7302 F" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f_status">Status</label>
+            <select id="f_status">
+              <option value="available">Available</option>
+              <option value="reserved">Reserved</option>
+              <option value="sold">Sold</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f_id">ID (optional)</label>
+            <input id="f_id" placeholder="auto-generated if empty" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label><input type="checkbox" id="f_featured" /> Featured on homepage</label>
+        </div>
+        <div class="form-group">
+          <label for="f_images">Image paths (one per line, relative to public/)</label>
+          <textarea id="f_images" rows="3" placeholder="images/charger-2.jpg"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="f_description">Description</label>
+          <textarea id="f_description" rows="3"></textarea>
+        </div>
+        <div class="toolbar">
+          <button type="submit" class="btn btn-primary">Save vehicle</button>
+          <button type="button" class="btn btn-outline" id="resetFormBtn">Clear form</button>
+        </div>
+      </form>
+    </div>
+
+    <p style="margin-top:2rem;color:var(--muted);font-size:0.85rem">
+      <strong>Supabase:</strong> When you add your project URL and anon key in
+      <code>js/supabase-config.js</code> and run <code>supabase/schema.sql</code>,
+      we can switch this admin to save to the cloud. Until then, data stays in this browser.
+    </p>
+  </div>
+
+  <script src="js/cars.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

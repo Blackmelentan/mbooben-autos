@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inventory — MBOOBEN AUTO'S</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo-link">
+        <img src="public/images/logo.png" alt="MBOOBEN AUTO'S" />
+        <div class="brand-text">
+          <strong>MBOOBEN AUTO'S</strong>
+          <span>QUALITY • TRUST • PERFORMANCE</span>
+        </div>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+      <nav class="nav" id="mainNav">
+        <a href="index.html">Home</a>
+        <a href="inventory.html" class="active">Inventory</a>
+        <a href="about.html">About</a>
+        <a href="contact.html" class="btn-nav">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-hero">
+    <div class="container">
+      <h1>Our Inventory</h1>
+      <p>Quality vehicles ready for viewing and test drive</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="filters" id="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="Dodge">Dodge</button>
+        <button class="filter-btn" data-filter="BMW">BMW</button>
+        <button class="filter-btn" data-filter="Ford">Ford</button>
+      </div>
+      <div class="cars-grid" id="inventoryGrid"></div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <strong>MBOOBEN AUTO'S</strong>
+          <p>Premium vehicle dealership. Quality • Trust • Performance.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="inventory.html">Inventory</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <p>+220 325 9613</p>
+          <p>Musamboob6@gmail.com</p>
+          <p>Yaram Bamba, Yundum, The Gambia</p>
+        </div>
+      </div>
+      <div class="footer-bottom">© 2026 MBOOBEN AUTO'S. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="js/cars.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    function renderCars(filter) {
+      const list = filter === 'all' ? CARS : CARS.filter(c => c.make === filter);
+      document.getElementById('inventoryGrid').innerHTML = list.map(car => `
+        <article class="car-card">
+          <a href="car.html?id=${car.id}">
+            <div class="car-card-img">
+              <img src="public/${car.images[0]}" alt="${car.make} ${car.model}" loading="lazy" />
+              ${car.status === 'available' ? '<span class="car-badge">Available</span>' : ''}
+            </div>
+            <div class="car-card-body">
+              <h3>${car.year} ${car.make} ${car.model}</h3>
+              <div class="car-meta">${car.color}${car.plate ? ' • ' + car.plate : ''}</div>
+              <div class="car-price">${formatPrice(car.price)}</div>
+              <div class="car-card-footer">
+                <span class="link">View details →</span>
+              </div>
+            </div>
+          </a>
+        </article>
+      `).join('') || '<p style="color:var(--muted)">No vehicles in this category.</p>';
+    }
+    renderCars('all');
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderCars(btn.dataset.filter);
+      });
+    });
+  </script>
+</body>
+</html>

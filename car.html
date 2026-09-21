@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vehicle Details — MBOOBEN AUTO'S</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo-link">
+        <img src="public/images/logo.png" alt="MBOOBEN AUTO'S" />
+        <div class="brand-text">
+          <strong>MBOOBEN AUTO'S</strong>
+          <span>QUALITY • TRUST • PERFORMANCE</span>
+        </div>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+      <nav class="nav" id="mainNav">
+        <a href="index.html">Home</a>
+        <a href="inventory.html" class="active">Inventory</a>
+        <a href="about.html">About</a>
+        <a href="contact.html" class="btn-nav">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container detail-layout" id="carDetail">
+    <p style="color:var(--muted)">Loading…</p>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <strong>MBOOBEN AUTO'S</strong>
+          <p>Premium vehicle dealership. Quality • Trust • Performance.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="inventory.html">Inventory</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <p>+220 325 9613</p>
+          <p>Musamboob6@gmail.com</p>
+          <p>Yaram Bamba, Yundum, The Gambia</p>
+        </div>
+      </div>
+      <div class="footer-bottom">© 2026 MBOOBEN AUTO'S. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="js/cars.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const car = getCarById(params.get('id'));
+    const el = document.getElementById('carDetail');
+
+    if (!car) {
+      el.innerHTML = '<p>Vehicle not found. <a href="inventory.html">Back to inventory</a></p>';
+    } else {
+      document.title = `${car.year} ${car.make} ${car.model} — MBOOBEN AUTO'S`;
+      let current = 0;
+      el.innerHTML = `
+        <div>
+          <div class="gallery-main">
+            <img id="mainImg" src="public/${car.images[0]}" alt="${car.make} ${car.model}" />
+          </div>
+          <div class="gallery-thumbs" id="thumbs">
+            ${car.images.map((img, i) => `
+              <button type="button" class="${i === 0 ? 'active' : ''}" data-i="${i}">
+                <img src="public/${img}" alt="" />
+              </button>
+            `).join('')}
+          </div>
+        </div>
+        <div class="detail-info">
+          <div class="section-label">${car.status === 'available' ? 'Available' : car.status}</div>
+          <h1>${car.year} ${car.make} ${car.model}</h1>
+          <div class="detail-price">${formatPrice(car.price)}</div>
+          <div class="spec-list">
+            <div class="spec-item"><label>Colour</label><span>${car.color}</span></div>
+            <div class="spec-item"><label>Year</label><span>${car.year}</span></div>
+            <div class="spec-item"><label>Transmission</label><span>${car.transmission}</span></div>
+            <div class="spec-item"><label>Fuel</label><span>${car.fuel}</span></div>
+            ${car.plate ? `<div class="spec-item"><label>Plate</label><span>${car.plate}</span></div>` : ''}
+          </div>
+          <p class="detail-desc">${car.description}</p>
+          <div class="contact-actions">
+            <a class="btn btn-primary" href="tel:+2203259613">Call +220 325 9613</a>
+            <a class="btn btn-outline" href="https://wa.me/2203259613?text=${encodeURIComponent('Hi, I am interested in the ' + car.year + ' ' + car.make + ' ' + car.model)}" target="_blank" rel="noopener">WhatsApp Enquiry</a>
+            <a class="btn btn-outline" href="contact.html?car=${car.id}">Send Message</a>
+          </div>
+        </div>
+      `;
+      document.getElementById('thumbs').addEventListener('click', e => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        current = +btn.dataset.i;
+        document.getElementById('mainImg').src = 'public/' + car.images[current];
+        document.querySelectorAll('#thumbs button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    }
+  </script>
+</body>
+</html>
