@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Inventory — MBOOBEN AUTO'S</title>
+  <meta name="description" content="Browse available vehicles at MBOOBEN AUTO'S in Yundum, The Gambia." />
+  <link rel="icon" type="image/png" sizes="32x32" href="public/images/favicon-32.png" />
+  <link rel="apple-touch-icon" href="public/images/favicon-180.png" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -13,7 +16,7 @@
         <img src="public/images/logo.png" alt="MBOOBEN AUTO'S" />
         <div class="brand-text">
           <strong>MBOOBEN AUTO'S</strong>
-          <span>QUALITY • TRUST • PERFORMANCE</span>
+          <span>Quality · Trust · Performance</span>
         </div>
       </a>
       <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
@@ -28,7 +31,7 @@
 
   <div class="page-hero">
     <div class="container">
-      <h1>Our Inventory</h1>
+      <h1>Our <span>Inventory</span></h1>
       <p>Quality vehicles ready for viewing and test drive</p>
     </div>
   </div>
@@ -50,7 +53,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <strong>MBOOBEN AUTO'S</strong>
-          <p>Premium vehicle dealership. Quality • Trust • Performance.</p>
+          <p>Premium vehicle dealership. Quality · Trust · Performance.</p>
         </div>
         <div class="footer-col">
           <h4>Quick Links</h4>
@@ -83,10 +86,10 @@
             </div>
             <div class="car-card-body">
               <h3>${car.year} ${car.make} ${car.model}</h3>
-              <div class="car-meta">${car.color}${car.plate ? ' • ' + car.plate : ''}</div>
+              <div class="car-meta">${car.color}${car.plate ? ' · ' + car.plate : ''}</div>
               <div class="car-price">${formatPrice(car.price)}</div>
               <div class="car-card-footer">
-                <span class="link">View details →</span>
+                <span class="link">View details</span>
               </div>
             </div>
           </a>
